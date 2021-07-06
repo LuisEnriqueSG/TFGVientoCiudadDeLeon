@@ -1,0 +1,107 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Este blockMesh se creo para generar un estudio alrededor de un unico edificio. Las dimensiones estan en la carpeta de inventor y ahi esta el archivo para visualizarlo.
+
+
+scale   1;
+
+vertices
+(
+
+	(0 0 0) // 0
+	(480 0 0) // 1
+	(480 108 0) // 2
+	(0 108 0) // 3
+	(0 0 480) // 4
+	(480 0 480) // 5
+	(480 108 480) // 6
+	(0 108 480) // 7
+
+
+
+);
+
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (5 3 5) simpleGrading (1 1 1) // Donde hay la division, antes habia (30 10 30)
+
+);
+
+edges
+(
+);
+
+// Hay que mirar de donde viene el viento para establecer el inlet y outlet.
+// Ademas hay que editar las distintas caras.
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3) // Es la cara frontal al edifico.
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (1 2 6 5)
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 1 5 4) // Es el suelo.
+        );
+    }
+
+    leftAndRight
+    {
+        type patch;
+        faces
+        (
+            (0 3 2 1) // Es la cara Izq vista desde delante del edificio.
+	    (4 5 6 7)
+        );
+    }
+
+    sky
+    {
+	type patch;
+	faces
+	(
+	    (7 6 2 3)
+	);
+    }
+
+
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

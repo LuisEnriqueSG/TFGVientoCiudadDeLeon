@@ -1,0 +1,208 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Este blockMesh se creo para generar un estudio alrededor de un unico edificio. Las dimensiones estan en la carpeta de inventor y ahi esta el archivo para visualizarlo.
+
+backgroundMesh
+{
+    xMin		-4;
+    xMax		12;
+    yMin		0;
+    yMax		14;
+    zMin		-15;
+    zMax		6;
+    xMinBuilding	0;
+    xMaxBuilding	8;
+    yMinBuilding	0;
+    yMaxBuilding	10;
+    zMinBuilding	-5;
+    zMaxBuilding	0;
+    xCells		3;
+    yCells		3;
+    zCells		3;
+
+}
+
+scale   1;
+
+vertices
+(
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMin) // 0
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMin) // 1
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMin) // 2
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMin) // 3
+
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMax) // 4
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMax) // 5
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMax) // 6
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMax) // 7
+
+    ($:backgroundMesh.xMinBuilding $:backgroundMesh.yMinBuilding $:backgroundMesh.zMinBuilding) // 8
+    ($:backgroundMesh.xMaxBuilding $:backgroundMesh.yMinBuilding $:backgroundMesh.zMinBuilding) // 9
+    ($:backgroundMesh.xMaxBuilding $:backgroundMesh.yMaxBuilding $:backgroundMesh.zMinBuilding) // 10
+    ($:backgroundMesh.xMinBuilding $:backgroundMesh.yMaxBuilding $:backgroundMesh.zMinBuilding) //11
+
+    ($:backgroundMesh.xMinBuilding $:backgroundMesh.yMinBuilding $:backgroundMesh.zMaxBuilding) // 12
+    ($:backgroundMesh.xMaxBuilding $:backgroundMesh.yMinBuilding $:backgroundMesh.zMaxBuilding) // 13
+    ($:backgroundMesh.xMaxBuilding $:backgroundMesh.yMaxBuilding $:backgroundMesh.zMaxBuilding) // 14
+    ($:backgroundMesh.xMinBuilding $:backgroundMesh.yMaxBuilding $:backgroundMesh.zMaxBuilding) // 15
+);
+
+// Editado hasta aqui, falta establecer bloques y demas.
+
+blocks
+(
+
+	hex ()
+
+
+
+
+
+    hex (0 1 2 3 4 5 6 7)
+    (
+        $:backgroundMesh.xCells
+        $:backgroundMesh.yCells
+        $:backgroundMesh.zCells
+    )
+
+    simpleGrading (1 1 1)
+
+    hex (8 9 10 11 12 13 14 15)
+    (
+	$:backgroundMesh.xCells
+	$:backgroundMesh.yCells
+	$:backgroundMesh.zCells
+    )
+);
+
+edges
+(
+);
+
+// Hay que mirar de donde viene el viento para establecer el inlet y outlet.
+// Ademas hay que editar las distintas caras.
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (4 5 6 7) // Es la cara frontal al edifico.
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (1 2 6 5) // Es la cara de detras del edificio.
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 1 4 5) // Es el suelo.
+        );
+    }
+
+    left
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 4 7 3) // Es la cara Izq vista desde delante del edificio.
+        );
+    }
+    right
+    {
+	type symmetryPlane;
+	faces
+	(
+	    (1 2 6 5) //Es la cara Sur.
+	);
+    }
+    sky
+    {
+	type symmetryPlane;
+	faces
+	(
+	    (2 3 7 6)
+	);
+    }
+    front
+    {
+	type	wall;
+	faces
+	(
+		(12 13 14 15)
+	);
+    }
+    back
+    {
+	type	wall;
+	faces
+	(
+		(8 11 10 9)
+	);
+    }
+    up
+    {
+	type	wall;
+	faces
+	(
+		(11 12 15 14)
+	);
+    }
+    botton
+    {
+	type	wall;
+	faces
+	(
+		(8 9 13 12)
+	);
+    }
+    leftSide
+    {
+	type	wall;
+	faces
+	(
+		(8 12 15 11)
+	);
+    }
+    rightSide
+    {
+	type	wall;
+	faces
+	(
+		(9 10 14 13)
+	);
+    }
+
+
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 91660.7; // La presion la he calculado y da un valor de 91660.7 Pa internamente
+
+boundaryField
+{
+    inletWest
+    {
+        type            zeroGradient;
+    }
+
+    outletEast
+    {
+        type            totalPressure;
+        p0              uniform 91660.7;
+    }
+
+    city_Building
+    {
+        type            zeroGradient;
+    }
+
+    city_Pool
+    {
+        type            zeroGradient;
+    }
+
+    ground
+    {
+        type            zeroGradient;
+    }
+
+    outletNorth
+    {
+        type            totalPressure;
+        p0              uniform 91660.7;
+    }
+
+    outletSouth
+    {
+        type            totalPressure;
+        p0              uniform 91660.7;
+    }
+
+    sky
+    {
+        type            totalPressure;
+        p0              uniform 91660.7;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

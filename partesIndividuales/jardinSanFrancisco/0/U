@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Uinlet          (20 0 0); // Introducir un valor de 10.34 km/h (37.224m/s) desde el Oeste que se corresponde con el eje X en la direccion positiva.
+// En vez de eso puesto que no converge le doy un valor de v de 3 m/s.
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0); // Dejo que en el interior del dominio el aire esta en calma antes de comenzar a simular.
+
+boundaryField
+{
+    inletWest
+    {
+        type            fixedValue;
+        value           uniform $Uinlet;
+    }
+
+    outletEast
+    {
+        type            zeroGradient;
+    }
+
+    city_Building
+    {
+        type            noSlip;
+    }
+
+    city_Pool
+    {
+        type            noSlip;
+    }
+
+    ground
+    {
+	type		noSlip;
+    }
+
+    outletNorth
+    {
+        type            zeroGradient;
+    }
+
+    outletSouth
+    {
+        type            zeroGradient;
+    }
+
+    sky
+    {
+        type            zeroGradient;
+    }
+
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

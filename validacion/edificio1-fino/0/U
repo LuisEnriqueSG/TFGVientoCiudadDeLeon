@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Uinlet          (10 0 0); // Va a invcidir con un angulo de 10º asique si tengo una magnitud de 10 m/s hay que descomponerlo siendo el cos el eje X y sen el eje Z.
+
+// Introducir un valor de 10.34 km/h (37.224m/s) desde el Oeste que se corresponde con el eje X en la direccion positiva.
+// En vez de eso puesto que no converge le doy un valor de v de 3 m/s.
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0); // Dejo que en el interior del dominio el aire esta en calma antes de comenzar a simular.
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue; // Probar con atmBoundaryLayerInletVelocity, esta la estructura en internet.
+	value		uniform $Uinlet;
+
+    }
+
+    outlet
+    {
+        type		zeroGradient;
+    }
+
+    building
+    {
+        type            fixedValue;// Estaba con noSlip
+	value		uniform (0 0 0);
+
+    }
+
+    ground
+    {
+	type		fixedValue; // Estaba con noSlip
+	value		uniform (0 0 0);
+    }
+
+    leftAndRight
+    {
+        type           	noSlip; //Estaba con zeroGradient
+    }
+
+    sky
+    {
+        type            noSlip; //Estaba con zeroGradient111
+    }
+
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

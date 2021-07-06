@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+
+// ESTE BLOCKMESH ES UNO MAS PEQUÑO PARA SEBER SI FUNCIONA LA SIMULACION Y LLEVARLA A OTRO  ORDENADOR CON LA MALLA GRANDE
+
+//SE HA VUELTO A REDUCIR PORQUE PARA LA RAM DE ESTE ORDENADOR NO PUEDE CON EL.
+
+backgroundMesh
+{
+    xMin  	2200;
+    xMax   	2700;
+    yMin    	0;
+    yMax    	200;
+    zMin  	-1880;
+    zMax    	-1605;
+    xCells  	3;	// Este archivo tiene la malla muy pequeña para que se pueda correr en el ordenador personal.
+    yCells   	3;
+    zCells   	3;
+}
+
+scale   1;
+
+vertices
+(
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMin)
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMin)
+
+    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMax)
+    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMax)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7)
+    (
+        $:backgroundMesh.xCells
+        $:backgroundMesh.yCells
+        $:backgroundMesh.zCells
+    )
+    simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+// Hay que mirar de donde viene el viento para establecer el inlet y outlet.
+// Ademas hay que editar las distintas caras.
+
+boundary
+(
+    inletWest
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3) // Es la cara Oeste.
+        );
+    }
+
+    outletEast
+    {
+        type patch;
+        faces
+        (
+            (1 2 6 5) // Es la cara Este
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 1 5 4) // Es el suelo.
+        );
+    }
+
+    outletNorth
+    {
+        type patch;
+        faces
+        (
+            (0 3 2 1) // Es la cara Norte.
+        );
+    }
+    outletSouth
+    {
+	type patch;
+	faces
+	(
+	    ( 4 5 6 7) //Es la cara Sur.
+	);
+    }
+    sky
+    {
+	type patch;
+	faces
+	(
+	    (2 3 7 6)
+	);
+    }
+
+
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
